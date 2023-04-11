@@ -1,7 +1,6 @@
 package com.github.FilipeRobot.view;
 
 import com.github.FilipeRobot.controller.LoginController;
-import com.github.FilipeRobot.model.Usuario;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -24,7 +23,7 @@ public class Login extends JFrame {
     int xMouse, yMouse;
     private JLabel labelExit;
 
-    //private final LoginController controleLogin;
+    private final LoginController controleLogin;
 
     /**
      * Launch the application.
@@ -228,7 +227,7 @@ public class Login extends JFrame {
         header.setBounds(0, 0, 784, 36);
         panel.add(header);
         header.setLayout(null);
-        //controleLogin = new LoginController();
+        controleLogin = new LoginController();
     }
 
     private void fechar(MouseEvent e) {
@@ -240,6 +239,7 @@ public class Login extends JFrame {
                 JOptionPane.INFORMATION_MESSAGE);
 
         if (sair == 0) {
+            controleLogin.close();
             System.exit(0);
         }
     }
@@ -251,30 +251,29 @@ public class Login extends JFrame {
         String senhaInformada = new String (txtSenha.getPassword());
         String loginInformado = txtUsuario.getText().trim();
 
-//        try {
-//            Usuario usuario = controleLogin.buscarUsuario(loginInformado, senhaInformada);
-//
+        try {
+            controleLogin.buscarUsuario(loginInformado, senhaInformada);
+
 //            JOptionPane.showMessageDialog(this, "FUNCIONA  \n" +
 //                    "USER = " + usuario.getLogin() + "\n" +
 //                    "SENHA = " + usuario.getSenha());
-//
-//
-//            MenuUsuario menu = new MenuUsuario();
-//            menu.setVisible(true);
-//            dispose();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            JOptionPane.showMessageDialog(this, "Usuário ou Senha não válidos");
-//        }
 
-        if(loginInformado.equals(Usuario) && senhaInformada.equals(Senha)){
+
             MenuUsuario menu = new MenuUsuario();
             menu.setVisible(true);
             dispose();
-        }else {
+
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Usuário ou Senha não válidos");
         }
+
+//        if(loginInformado.equals(Usuario) && senhaInformada.equals(Senha)){
+//            MenuUsuario menu = new MenuUsuario();
+//            menu.setVisible(true);
+//            dispose();
+//        }else {
+//            JOptionPane.showMessageDialog(this, "Usuário ou Senha não válidos");
+//        }
     }
 
     //Código que permite movimentar a janela pela tela seguindo a posição de "x" e "y"

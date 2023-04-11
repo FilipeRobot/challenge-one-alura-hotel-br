@@ -1,5 +1,7 @@
 package com.github.FilipeRobot.view;
 
+import com.github.FilipeRobot.controller.ReservaController;
+import com.github.FilipeRobot.model.Reserva;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
@@ -9,11 +11,17 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.io.Serial;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.Objects;
 
 public class ReservasView extends JFrame {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     public static JTextField txtValor;
     public static JDateChooser txtDataE;
@@ -23,6 +31,10 @@ public class ReservasView extends JFrame {
     private JLabel labelExit;
     private JLabel lblValorSimbolo;
     private JLabel labelAtras;
+
+    private static LocalDate dataEntrada;
+    private static LocalDate dataSaida;
+    private static BigDecimal valorReserva;
 
     /**
      * Launch the application.
@@ -124,10 +136,12 @@ public class ReservasView extends JFrame {
         txtDataS.getCalendarButton().setBounds(267, 1, 21, 31);
         txtDataS.setBackground(Color.WHITE);
         txtDataS.setFont(new Font("Roboto", Font.PLAIN, 18));
-        txtDataS.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                //Ativa o evento, após o usuário selecionar as datas, o valor da reserva deve ser calculado
-
+        txtDataS.addPropertyChangeListener(evt -> {
+            //Ativa o evento, após o usuário selecionar as datas, o valor da reserva deve ser calculado
+            if (txtDataE.getDate() != null && txtDataS.getDate() != null) {
+                dataEntrada = txtDataE.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                dataSaida = txtDataS.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                valorReserva = calcularValorReserva(dataEntrada, dataSaida);
             }
         });
 //        txtDataS.setDateFormatString("yyyy-MM-dd");
@@ -141,7 +155,7 @@ public class ReservasView extends JFrame {
         txtValor.setBackground(SystemColor.text);
         txtValor.setHorizontalAlignment(SwingConstants.CENTER);
         txtValor.setForeground(Color.BLACK);
-        txtValor.setBounds(78, 328, 43, 33);
+        txtValor.setBounds(78, 328, 150, 33);
         txtValor.setEditable(false);
         txtValor.setFont(new Font("Roboto Black", Font.BOLD, 17));
         txtValor.setBorder(javax.swing.BorderFactory.createEmptyBorder());
@@ -285,8 +299,11 @@ public class ReservasView extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (ReservasView.txtDataE.getDate() != null && ReservasView.txtDataS.getDate() != null) {
-//                    RegistroHospede registro = new RegistroHospede();
-//                    registro.setVisible(true);
+                    Long codigoReserva = registrarReserva();
+                    // CADASTRAR RESERVA
+                    RegistroHospede registro = new RegistroHospede(codigoReserva);
+                    registro.setVisible(true);
+                    dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Deve preencher todos os campos.");
                 }
@@ -304,6 +321,38 @@ public class ReservasView extends JFrame {
         lblSeguinte.setFont(new Font("Roboto", Font.PLAIN, 18));
         lblSeguinte.setBounds(0, 0, 122, 35);
         btnProximo.add(lblSeguinte);
+    }
+
+    private static Long registrarReserva() {
+        String formaPagamento = txtFormaPagamento.getItemAt(
+                txtFormaPagamento.getSelectedIndex()
+        );
+        Reserva reserva = new Reserva(
+                dataEntrada,
+                dataSaida,
+                valorReserva,
+                formaPagamento
+        );
+        try (ReservaController reservaController = new ReservaController()) {
+            reservaController.registrar(reserva);
+            return reserva.getId();
+        }
+    }
+
+    private static BigDecimal calcularValorReserva(LocalDate dataEntrada, LocalDate dataSaida) {
+            int numeroDeDias = Period.between(dataEntrada, dataSaida).getDays();
+
+            BigDecimal valorDaReserva = new BigDecimal(BigInteger.ZERO);
+            BigDecimal valorDiaria = new BigDecimal("10");
+            if (numeroDeDias == 0) {
+                valorDaReserva = valorDaReserva.add(valorDiaria);
+            } else {
+                for (int i = 0; i <= numeroDeDias; i++) {
+                    valorDaReserva = valorDaReserva.add(valorDiaria);
+                }
+            }
+            txtValor.setText("R$" + valorDaReserva);
+            return valorDaReserva;
     }
 
     //Código que permite movimentar a janela pela tela seguindo a posição de "x" e "y"
