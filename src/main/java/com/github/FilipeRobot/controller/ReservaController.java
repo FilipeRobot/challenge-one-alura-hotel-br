@@ -1,9 +1,9 @@
 package com.github.FilipeRobot.controller;
 
 import com.github.FilipeRobot.model.Reserva;
-import com.github.FilipeRobot.model.Usuario;
 import com.github.FilipeRobot.service.ReservaService;
-import com.github.FilipeRobot.service.UsuarioService;
+
+import java.util.List;
 
 public class ReservaController implements AutoCloseable {
     private final ReservaService service;
@@ -17,6 +17,10 @@ public class ReservaController implements AutoCloseable {
 
     public Reserva buscarReserva(Long id) {
         return service.buscarPorID(id);
+    }
+
+    public List<Reserva> buscar() {
+        return service.buscarTodas();
     }
 
     @Override

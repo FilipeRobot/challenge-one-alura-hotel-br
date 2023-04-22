@@ -4,6 +4,7 @@ import com.github.FilipeRobot.model.Reserva;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import java.util.List;
 
 public class ReservaDAO {
     private final EntityManager entityManager;
@@ -22,6 +23,11 @@ public class ReservaDAO {
             throw new NoResultException("Reserva não encontrado");
         }
         return reserva;
+    }
+
+    public List<Reserva> buscarAll(){
+        String jpql = "SELECT r FROM Reserva r";
+        return entityManager.createQuery(jpql, Reserva.class).getResultList();
     }
 
 //    public Reserva buscarPorLogin(String login) {

@@ -1,10 +1,8 @@
 package com.github.FilipeRobot;
 
 import com.github.FilipeRobot.model.Hospede;
-import com.github.FilipeRobot.model.Reserva;
 import com.github.FilipeRobot.model.Usuario;
 import com.github.FilipeRobot.service.HospedeService;
-import com.github.FilipeRobot.service.ReservaService;
 import com.github.FilipeRobot.service.UsuarioService;
 
 import java.time.LocalDate;

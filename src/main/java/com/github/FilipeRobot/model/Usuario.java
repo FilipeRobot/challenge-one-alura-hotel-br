@@ -3,7 +3,6 @@ package com.github.FilipeRobot.model;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.UUID;
 
 @Entity
 @Table(name = "users")

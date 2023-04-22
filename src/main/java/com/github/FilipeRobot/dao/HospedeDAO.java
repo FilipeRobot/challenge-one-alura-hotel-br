@@ -1,8 +1,6 @@
 package com.github.FilipeRobot.dao;
 
 import com.github.FilipeRobot.model.Hospede;
-import com.github.FilipeRobot.model.Reserva;
-import com.github.FilipeRobot.model.Usuario;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;

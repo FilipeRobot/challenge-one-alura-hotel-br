@@ -1,12 +1,11 @@
 package com.github.FilipeRobot.service;
 
 import com.github.FilipeRobot.dao.ReservaDAO;
-import com.github.FilipeRobot.dao.UsuarioDAO;
 import com.github.FilipeRobot.model.Reserva;
-import com.github.FilipeRobot.model.Usuario;
 import com.github.FilipeRobot.utils.JPAUtils;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 public class ReservaService implements AutoCloseable {
     private final EntityManager entityManager;
@@ -35,6 +34,10 @@ public class ReservaService implements AutoCloseable {
 
     public Reserva buscarPorID(Long id) {
         return reservaDAO.buscarPorID(id);
+    }
+
+    public List<Reserva> buscarTodas() {
+        return reservaDAO.buscarAll();
     }
 //
 //    public Usuario buscarPorLogin(String login) {

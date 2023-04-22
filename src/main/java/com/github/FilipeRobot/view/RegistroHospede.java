@@ -214,7 +214,7 @@ public class RegistroHospede extends JFrame {
         contentPane.add(txtTelefone);
 
         JLabel lblTitulo = new JLabel("REGISTRO HÓSPEDE");
-        lblTitulo.setBounds(606, 55, 234, 42);
+        lblTitulo.setBounds(570, 55, 274, 42);
         lblTitulo.setForeground(new Color(12, 138, 199));
         lblTitulo.setFont(new Font("Roboto Black", Font.PLAIN, 23));
         contentPane.add(lblTitulo);
@@ -276,7 +276,11 @@ public class RegistroHospede extends JFrame {
         btnsalvar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                registrarHospede();
+                try {
+                    registrarHospede();
+                } catch (Exception exception) {
+                    JOptionPane.showMessageDialog(null, exception.getMessage());
+                }
             }
         });
         btnsalvar.setLayout(null);
