@@ -1,6 +1,8 @@
 package com.github.FilipeRobot.view;
 
+import com.github.FilipeRobot.controller.HospedeController;
 import com.github.FilipeRobot.controller.ReservaController;
+import com.github.FilipeRobot.model.Hospede;
 import com.github.FilipeRobot.model.Reserva;
 
 import javax.swing.*;
@@ -202,20 +204,13 @@ public class Buscar extends JFrame {
         btnbuscar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                try (ReservaController controller = new ReservaController()) {
-                    List<Reserva> reservas = controller.buscar(); // Buscar lista de reservas do banco de dados
-                    AtomicInteger item = new AtomicInteger();
-                    reservas.forEach(reserva -> {
-                        modelo.insertRow(item.getAndIncrement(), new Object[]{
-                                reserva.getId(),
-                                reserva.getDataEntrada(),
-                                reserva.getDataSaida(),
-                                reserva.getValor(),
-                                reserva.getFormaPagamento()
-                        });
-                    });
-                } catch (Exception exception) {
-                    exception.printStackTrace();
+                clearTable(modelo);
+                clearTable(modeloHospedes);
+
+                switch (panel.getSelectedIndex()) {
+                    case 0 -> preencherTabelaDeReservas();
+                    case 1 -> preencherTabelaDeHospedes();
+                    default -> throw new RuntimeException("Opção invalida");
                 }
             }
         });
@@ -260,6 +255,81 @@ public class Buscar extends JFrame {
         lblExcluir.setBounds(0, 0, 122, 35);
         btnDeletar.add(lblExcluir);
         setResizable(false);
+    }
+
+    private void preencherTabelaDeHospedes() {
+        try (HospedeController hospedeController = new HospedeController()){
+            String sobrenome = txtBuscar.getText().trim();
+
+            if (sobrenome.isBlank()) {
+                List<Hospede> hospedes = hospedeController.buscarTodos();
+                AtomicInteger item = new AtomicInteger();
+                hospedes.forEach(hospede -> {
+                    modeloHospedes.insertRow(item.getAndIncrement(), new Object[]{
+                            hospede.getId(),
+                            hospede.getNome(),
+                            hospede.getSobrenome(),
+                            hospede.getDataNascimento(),
+                            hospede.getNacionalidade(),
+                            hospede.getTelefone(),
+                            hospede.getReserva()
+                    });
+                });
+            } else {
+                List<Hospede> hospedes = hospedeController.buscarPorSobrenome(sobrenome);
+                AtomicInteger item = new AtomicInteger();
+                hospedes.forEach(hospede -> {
+                    modeloHospedes.insertRow(item.getAndIncrement(), new Object[]{
+                            hospede.getId(),
+                            hospede.getNome(),
+                            hospede.getSobrenome(),
+                            hospede.getDataNascimento(),
+                            hospede.getNacionalidade(),
+                            hospede.getTelefone(),
+                            hospede.getReserva()
+                    });
+                });
+            }
+        }
+    }
+
+    private void preencherTabelaDeReservas() {
+        try (ReservaController reservaController = new ReservaController()) {
+            if (txtBuscar.getText().trim().isBlank()) {
+                List<Reserva> reservas = reservaController.buscar(); // Buscar lista de reservas do banco de dados
+                AtomicInteger item = new AtomicInteger();
+                reservas.forEach(reserva -> {
+                    modelo.insertRow(item.getAndIncrement(), new Object[]{
+                            reserva.getId(),
+                            reserva.getDataEntrada(),
+                            reserva.getDataSaida(),
+                            reserva.getValor(),
+                            reserva.getFormaPagamento()
+                    });
+                });
+            } else {
+                long idReserva = Long.parseLong(txtBuscar.getText().trim());
+                Reserva reserva = reservaController.buscarReserva(idReserva);
+                modelo.insertRow(0, new Object[]{
+                        reserva.getId(),
+                        reserva.getDataEntrada(),
+                        reserva.getDataSaida(),
+                        reserva.getValor(),
+                        reserva.getFormaPagamento()
+                });
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    private void clearTable(DefaultTableModel modelo) {
+        int rowCount = modelo.getRowCount();
+        if (rowCount > 0) {
+            for (int i = rowCount - 1; i > -1; i--) {
+                modelo.removeRow(i);
+            }
+        }
     }
 
     //Código que permite movimentar a janela pela tela seguindo a posição de "x" e "y"

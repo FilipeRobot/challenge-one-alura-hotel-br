@@ -33,6 +33,10 @@ public class Hospede {
         this.reserva = reserva;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getNome() {
         return nome;
     }
@@ -51,5 +55,9 @@ public class Hospede {
 
     public String getTelefone() {
         return telefone;
+    }
+
+    public Long getReserva() {
+        return reserva;
     }
 }

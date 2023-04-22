@@ -4,6 +4,7 @@ import com.github.FilipeRobot.model.Hospede;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import java.util.List;
 
 public class HospedeDAO {
     private final EntityManager entityManager;
@@ -23,18 +24,24 @@ public class HospedeDAO {
         }
         return hospede;
     }
-//
-//    public Reserva buscarPorNome(String login) {
-//        String jpql = "SELECT u FROM Reserva u WHERE u.login LIKE :login";
-//
-//        try {
-//            return entityManager.createQuery(jpql, Reserva.class)
-//                    .setParameter("login", login)
-//                    .getSingleResult();
-//        } catch (NoResultException exception) {
-//            throw new NoResultException("Usuário não encontrado");
-//        }
-//    }
+
+    public List<Hospede> buscarAll() {
+        String jpql = "SELECT h FROM Hospede h";
+
+        return entityManager.createQuery(jpql, Hospede.class).getResultList();
+    }
+
+    public List<Hospede> buscarPorSobrenome(String sobrenome) {
+        String jpql = "SELECT h FROM Hospede h WHERE h.sobrenome LIKE :sobrenome";
+
+        try {
+            return entityManager.createQuery(jpql, Hospede.class)
+                    .setParameter("sobrenome", sobrenome)
+                    .getResultList();
+        } catch (NoResultException exception) {
+            throw new NoResultException("Hospede não encontrado");
+        }
+    }
 //
 //    public void editarUsuario(Reserva reserva){
 //        entityManager.merge(reserva);

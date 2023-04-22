@@ -5,6 +5,7 @@ import com.github.FilipeRobot.model.Hospede;
 import com.github.FilipeRobot.utils.JPAUtils;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 public class HospedeService implements AutoCloseable {
     private final EntityManager entityManager;
@@ -39,10 +40,14 @@ public class HospedeService implements AutoCloseable {
     public Hospede buscarPorID(Long id) {
         return hospedeDAO.buscarPorID(id);
     }
-//
-//    public Usuario buscarPorLogin(String login) {
-//        return reservaDAO.buscarPorLogin(login);
-//    }
+
+    public List<Hospede> buscarPorSobrenome(String sobrenome) {
+        return hospedeDAO.buscarPorSobrenome(sobrenome);
+    }
+
+    public List<Hospede> buscarTodos() {
+        return hospedeDAO.buscarAll();
+    }
 //
 //    public void editar(Usuario usuario, String newLogin, String newSenha) {
 //        this.entityManager.getTransaction().begin();
