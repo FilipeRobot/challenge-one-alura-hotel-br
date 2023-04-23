@@ -1,19 +1,19 @@
 package com.github.FilipeRobot.view;
 
+import com.github.FilipeRobot.controller.HotelController;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.io.Serial;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
+@SuppressWarnings("serial")
 public class MenuUsuario extends JFrame {
-    @Serial
-    private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     int xMouse, yMouse;
     private JLabel labelExit;
@@ -196,10 +196,8 @@ public class MenuUsuario extends JFrame {
         labelData.setForeground(Color.WHITE);
         labelData.setFont(new Font("Roboto", Font.PLAIN, 33));
         Date dataAtual = new Date(); //data atual
-        String dataComHora = "dd/MM/yyyy '-' HH:mm";
-        String dataSemHora = "dd/MM/yyyy";
-        String fecha = new SimpleDateFormat(dataSemHora).format(dataAtual); //formata a data numa string
-        labelData.setText("Hoje é " + fecha); //estabelece a data na label
+        String data = new SimpleDateFormat("dd/MM/yyyy").format(dataAtual); //formata a data numa string
+        labelData.setText("Hoje é " + data); //estabelece a data na label
 
         JLabel lbltitulo = new JLabel("Bem-vindo");
         lbltitulo.setFont(new Font("Roboto", Font.BOLD, 24));

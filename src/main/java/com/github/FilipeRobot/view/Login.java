@@ -1,6 +1,6 @@
 package com.github.FilipeRobot.view;
 
-import com.github.FilipeRobot.controller.LoginController;
+import com.github.FilipeRobot.controller.HotelController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -8,22 +8,17 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.io.Serial;
 import java.util.Objects;
 
+@SuppressWarnings("serial")
 public class Login extends JFrame {
-    /**
-     *
-     */
-    @Serial
-    private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JTextField txtUsuario;
     private JPasswordField txtSenha;
     int xMouse, yMouse;
     private JLabel labelExit;
 
-    private final LoginController controleLogin;
+//    private final LoginController controleLogin;
 
     /**
      * Launch the application.
@@ -227,7 +222,7 @@ public class Login extends JFrame {
         header.setBounds(0, 0, 784, 36);
         panel.add(header);
         header.setLayout(null);
-        controleLogin = new LoginController();
+        //controleLogin = new LoginController();
     }
 
     private void fechar(MouseEvent e) {
@@ -239,41 +234,26 @@ public class Login extends JFrame {
                 JOptionPane.INFORMATION_MESSAGE);
 
         if (sair == 0) {
-            controleLogin.close();
+//            controleLogin.close();
             System.exit(0);
         }
     }
 
     private void Entrar() {
-        String Usuario= "admin";
-        String Senha="admin";
-
+        // TODO pensamento sobre o projeto, usar controller único, ou controllers separados
         String senhaInformada = new String (txtSenha.getPassword());
         String loginInformado = txtUsuario.getText().trim();
 
-        try {
-            controleLogin.buscarUsuario(loginInformado, senhaInformada);
-
-//            JOptionPane.showMessageDialog(this, "FUNCIONA  \n" +
-//                    "USER = " + usuario.getLogin() + "\n" +
-//                    "SENHA = " + usuario.getSenha());
-
-
-            MenuUsuario menu = new MenuUsuario();
-            menu.setVisible(true);
-            dispose();
-
+        try (HotelController hotelController = new HotelController()) {
+//            controleLogin.buscarUsuario(loginInformado, senhaInformada);
+            if(hotelController.login(loginInformado, senhaInformada)) {
+                MenuUsuario menu = new MenuUsuario();
+                menu.setVisible(true);
+                dispose();
+            }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Usuário ou Senha não válidos");
+            JOptionPane.showMessageDialog(this, e.getMessage());
         }
-
-//        if(loginInformado.equals(Usuario) && senhaInformada.equals(Senha)){
-//            MenuUsuario menu = new MenuUsuario();
-//            menu.setVisible(true);
-//            dispose();
-//        }else {
-//            JOptionPane.showMessageDialog(this, "Usuário ou Senha não válidos");
-//        }
     }
 
     //Código que permite movimentar a janela pela tela seguindo a posição de "x" e "y"

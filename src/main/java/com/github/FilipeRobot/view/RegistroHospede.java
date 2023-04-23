@@ -278,6 +278,9 @@ public class RegistroHospede extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 try {
                     registrarHospede();
+                    MenuUsuario usuario = new MenuUsuario();
+                    usuario.setVisible(true);
+                    dispose();
                 } catch (Exception exception) {
                     JOptionPane.showMessageDialog(null, exception.getMessage());
                 }

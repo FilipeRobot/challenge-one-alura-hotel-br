@@ -1,6 +1,7 @@
 package com.github.FilipeRobot.view;
 
 import com.github.FilipeRobot.controller.HospedeController;
+import com.github.FilipeRobot.controller.HotelController;
 import com.github.FilipeRobot.controller.ReservaController;
 import com.github.FilipeRobot.model.Hospede;
 import com.github.FilipeRobot.model.Reserva;
@@ -30,6 +31,8 @@ public class Buscar extends JFrame {
     private JLabel labelAtras;
     private JLabel labelExit;
     int xMouse, yMouse;
+
+    private final HotelController hotelController;
 
     /**
      * Launch the application.
@@ -207,6 +210,9 @@ public class Buscar extends JFrame {
                 clearTable(modelo);
                 clearTable(modeloHospedes);
 
+                /* TODO atualmente uma das maiores motivações para usar um controller único
+                    no projeto, junto com o gerenciamento da quantidade de Entidades/Conexões com o banco de dados*/
+
                 switch (panel.getSelectedIndex()) {
                     case 0 -> preencherTabelaDeReservas();
                     case 1 -> preencherTabelaDeHospedes();
@@ -255,14 +261,15 @@ public class Buscar extends JFrame {
         lblExcluir.setBounds(0, 0, 122, 35);
         btnDeletar.add(lblExcluir);
         setResizable(false);
+        hotelController = new HotelController();
     }
 
     private void preencherTabelaDeHospedes() {
-        try (HospedeController hospedeController = new HospedeController()){
-            String sobrenome = txtBuscar.getText().trim();
+        String sobrenome = txtBuscar.getText().trim();
 
+        try {
             if (sobrenome.isBlank()) {
-                List<Hospede> hospedes = hospedeController.buscarTodos();
+                List<Hospede> hospedes = hotelController.buscarHospedes();
                 AtomicInteger item = new AtomicInteger();
                 hospedes.forEach(hospede -> {
                     modeloHospedes.insertRow(item.getAndIncrement(), new Object[]{
@@ -276,7 +283,7 @@ public class Buscar extends JFrame {
                     });
                 });
             } else {
-                List<Hospede> hospedes = hospedeController.buscarPorSobrenome(sobrenome);
+                List<Hospede> hospedes = hotelController.buscarHospedePorSobrenome(sobrenome);
                 AtomicInteger item = new AtomicInteger();
                 hospedes.forEach(hospede -> {
                     modeloHospedes.insertRow(item.getAndIncrement(), new Object[]{
@@ -290,13 +297,51 @@ public class Buscar extends JFrame {
                     });
                 });
             }
+        } catch (Exception exception) {
+            JOptionPane.showMessageDialog(this, exception.getMessage());
         }
+
+        // TODO Apagar comentário abaixo no caso de decidir usar controller único
+
+//        try (HospedeController hospedeController = new HospedeController()){
+//
+//            if (sobrenome.isBlank()) {
+//                List<Hospede> hospedes = hospedeController.buscarTodos();
+//                AtomicInteger item = new AtomicInteger();
+//                hospedes.forEach(hospede -> {
+//                    modeloHospedes.insertRow(item.getAndIncrement(), new Object[]{
+//                            hospede.getId(),
+//                            hospede.getNome(),
+//                            hospede.getSobrenome(),
+//                            hospede.getDataNascimento(),
+//                            hospede.getNacionalidade(),
+//                            hospede.getTelefone(),
+//                            hospede.getReserva()
+//                    });
+//                });
+//            } else {
+//
+//                List<Hospede> hospedes = hospedeController.buscarPorSobrenome(sobrenome);
+//                AtomicInteger item = new AtomicInteger();
+//                hospedes.forEach(hospede -> {
+//                    modeloHospedes.insertRow(item.getAndIncrement(), new Object[]{
+//                            hospede.getId(),
+//                            hospede.getNome(),
+//                            hospede.getSobrenome(),
+//                            hospede.getDataNascimento(),
+//                            hospede.getNacionalidade(),
+//                            hospede.getTelefone(),
+//                            hospede.getReserva()
+//                    });
+//                });
+//            }
+//        }
     }
 
     private void preencherTabelaDeReservas() {
-        try (ReservaController reservaController = new ReservaController()) {
+        try {
             if (txtBuscar.getText().trim().isBlank()) {
-                List<Reserva> reservas = reservaController.buscar(); // Buscar lista de reservas do banco de dados
+                List<Reserva> reservas = hotelController.buscarReservas();
                 AtomicInteger item = new AtomicInteger();
                 reservas.forEach(reserva -> {
                     modelo.insertRow(item.getAndIncrement(), new Object[]{
@@ -309,7 +354,7 @@ public class Buscar extends JFrame {
                 });
             } else {
                 long idReserva = Long.parseLong(txtBuscar.getText().trim());
-                Reserva reserva = reservaController.buscarReserva(idReserva);
+                Reserva reserva = hotelController.buscarReservaPorId(idReserva);
                 modelo.insertRow(0, new Object[]{
                         reserva.getId(),
                         reserva.getDataEntrada(),
@@ -318,9 +363,44 @@ public class Buscar extends JFrame {
                         reserva.getFormaPagamento()
                 });
             }
+        }catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this,
+                            "Deixe vazio para todas as reservas" + '\n' +
+                            "Ou informe o código da reserva");
         } catch (Exception exception) {
             exception.printStackTrace();
+            JOptionPane.showMessageDialog(this, exception.getMessage());
         }
+
+        // TODO Apagar comentário abaixo no caso de decidir usar controller único
+
+//        try (ReservaController reservaController = new ReservaController()) {
+//            if (txtBuscar.getText().trim().isBlank()) {
+//                List<Reserva> reservas = reservaController.buscar(); // Buscar lista de reservas do banco de dados
+//                AtomicInteger item = new AtomicInteger();
+//                reservas.forEach(reserva -> {
+//                    modelo.insertRow(item.getAndIncrement(), new Object[]{
+//                            reserva.getId(),
+//                            reserva.getDataEntrada(),
+//                            reserva.getDataSaida(),
+//                            reserva.getValor(),
+//                            reserva.getFormaPagamento()
+//                    });
+//                });
+//            } else {
+//                long idReserva = Long.parseLong(txtBuscar.getText().trim());
+//                Reserva reserva = reservaController.buscarReserva(idReserva);
+//                modelo.insertRow(0, new Object[]{
+//                        reserva.getId(),
+//                        reserva.getDataEntrada(),
+//                        reserva.getDataSaida(),
+//                        reserva.getValor(),
+//                        reserva.getFormaPagamento()
+//                });
+//            }
+//        } catch (Exception exception) {
+//            exception.printStackTrace();
+//        }
     }
 
     private void clearTable(DefaultTableModel modelo) {

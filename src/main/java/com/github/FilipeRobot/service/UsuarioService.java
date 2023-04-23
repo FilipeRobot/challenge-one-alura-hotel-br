@@ -16,6 +16,11 @@ public class UsuarioService implements AutoCloseable {
         this.usuarioDAO = new UsuarioDAO(this.entityManager);
     }
 
+    public UsuarioService(EntityManager entityManager) {
+        this.entityManager = entityManager;
+        this.usuarioDAO = new UsuarioDAO(this.entityManager);
+    }
+
     public void registrar(Usuario usuario) {
         if (usuario.getLogin().trim().isEmpty()) {
             throw new RuntimeException("Usuário não informado!");

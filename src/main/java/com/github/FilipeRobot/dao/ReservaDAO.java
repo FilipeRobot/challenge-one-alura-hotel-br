@@ -25,28 +25,21 @@ public class ReservaDAO {
         return reserva;
     }
 
-    public List<Reserva> buscarAll(){
+    public List<Reserva> buscarReservas(){
         String jpql = "SELECT r FROM Reserva r";
-        return entityManager.createQuery(jpql, Reserva.class).getResultList();
+        try {
+            return entityManager.createQuery(jpql, Reserva.class)
+                    .getResultList();
+        } catch (NoResultException exception) {
+            throw new NoResultException("Nenhuma reserva encontrada");
+        }
     }
 
-//    public Reserva buscarPorLogin(String login) {
-//        String jpql = "SELECT u FROM Reserva u WHERE u.login LIKE :login";
-//
-//        try {
-//            return entityManager.createQuery(jpql, Reserva.class)
-//                    .setParameter("login", login)
-//                    .getSingleResult();
-//        } catch (NoResultException exception) {
-//            throw new NoResultException("Usuário não encontrado");
-//        }
-//    }
-
-    public void editarUsuario(Reserva reserva){
+    public void editarReserva(Reserva reserva){
         entityManager.merge(reserva);
     }
 
-    public void deletarUsuario(Reserva reserva) {
+    public void deletarReserva(Reserva reserva) {
         reserva = entityManager.merge(reserva);
         entityManager.remove(reserva);
     }

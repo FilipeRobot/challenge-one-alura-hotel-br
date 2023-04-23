@@ -3,10 +3,16 @@ package com.github.FilipeRobot.controller;
 import com.github.FilipeRobot.model.Usuario;
 import com.github.FilipeRobot.service.UsuarioService;
 
+import javax.persistence.EntityManager;
+
 public class LoginController implements AutoCloseable {
     private final UsuarioService service;
     public LoginController() {
         this.service = new UsuarioService();
+    }
+
+    public LoginController(EntityManager entityManager) {
+        this.service = new UsuarioService(entityManager);
     }
 
     public Usuario buscarUsuario(String loginInformado, String senhaInformada) {

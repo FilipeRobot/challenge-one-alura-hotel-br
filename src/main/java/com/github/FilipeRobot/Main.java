@@ -10,9 +10,17 @@ import java.time.LocalDate;
 
 public class Main {
     public static void main(String[] args) {
+        String teste = """
+                    Busca informada: "Busca"
+                Deixe vazio para todas as reservas
+                Ou informe o codigo da reserva""";
+
+        System.out.println(teste);
+
+
 //        testarUsuario(true);
 //
-        testarHospedeReserva();
+        //testarHospedeReserva();
 //        try (ReservaService service = new ReservaService()){
 //            LocalDate data1 = LocalDate.parse("2023-04-10");
 //            LocalDate data2 = LocalDate.parse("2023-04-11");
