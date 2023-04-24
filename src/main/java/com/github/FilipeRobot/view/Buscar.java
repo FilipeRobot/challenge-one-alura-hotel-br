@@ -14,6 +14,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.Serial;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -248,6 +250,17 @@ public class Buscar extends JFrame {
         btnEditar.add(lblEditar);
 
         JPanel btnDeletar = new JPanel();
+        btnDeletar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                switch (panel.getSelectedIndex()) {
+                    case 0 -> deletarReserva();
+                    case 1 -> deletarHospede();
+                    default -> throw new RuntimeException("Opção invalida");
+                }
+            }
+        });
         btnDeletar.setLayout(null);
         btnDeletar.setBackground(new Color(12, 138, 199));
         btnDeletar.setBounds(767, 508, 122, 35);
@@ -262,6 +275,26 @@ public class Buscar extends JFrame {
         btnDeletar.add(lblExcluir);
         setResizable(false);
         hotelController = new HotelController();
+    }
+
+    private void deletarHospede() {
+        int selectedRow = tbHospedes.getSelectedRow();
+        if (selectedRow > -1) {
+            Long id = (Long) modeloHospedes.getValueAt(selectedRow, 0);
+
+            hotelController.deletarHospede(id);
+            modeloHospedes.removeRow(selectedRow);
+        }
+    }
+
+    private void deletarReserva() {
+        int selectedRow = tbReservas.getSelectedRow();
+        if (selectedRow > -1) {
+            Long id = (Long) modelo.getValueAt(selectedRow, 0);
+
+            hotelController.deletarReserva(id);
+            modelo.removeRow(selectedRow);
+        }
     }
 
     private void preencherTabelaDeHospedes() {

@@ -28,8 +28,19 @@ public class HospedeController implements AutoCloseable {
         return service.buscarTodos();
     }
 
+    public Hospede buscarPorId(Long id) {
+        return service.buscarPorID(id);
+    }
+
+    public void deletarHospede(Long id) {
+        Hospede hospede = buscarPorId(id);
+        service.deletarHospede(hospede);
+    }
+
     @Override
     public void close() {
         service.close();
     }
+
+
 }

@@ -45,7 +45,13 @@ public class ReservaService implements AutoCloseable {
         return reservaDAO.buscarReservas();
     }
 
-    // TODO desenvolver editar e deletar reserva
+    public void deletarReserva(Reserva reserva) {
+        this.entityManager.getTransaction().begin();
+        reservaDAO.deletarReserva(reserva);
+        this.entityManager.getTransaction().commit();
+    }
+
+    // TODO desenvolver editar reserva
 
     @Override
     public void close() {

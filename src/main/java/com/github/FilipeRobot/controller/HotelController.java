@@ -52,4 +52,12 @@ public class HotelController implements AutoCloseable {
     public List<Hospede> buscarHospedePorSobrenome(String sobrenome) {
         return hospedeController.buscarPorSobrenome(sobrenome);
     }
+
+    public void deletarReserva(Long id) {
+        reservaController.deletarReserva(id);
+    }
+
+    public void deletarHospede(Long id) {
+        hospedeController.deletarHospede(id);
+    }
 }

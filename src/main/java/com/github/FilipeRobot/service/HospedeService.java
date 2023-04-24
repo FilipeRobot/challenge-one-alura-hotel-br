@@ -64,6 +64,12 @@ public class HospedeService implements AutoCloseable {
         return hospedeDAO.buscarAll();
     }
 
+    public void deletarHospede(Hospede hospede) {
+        this.entityManager.getTransaction().begin();
+        hospedeDAO.deletarHospede(hospede);
+        this.entityManager.getTransaction().commit();
+    }
+
     // TODO desenvolver editar e deletar hospede
 //
 //    public void editar(Usuario usuario, String newLogin, String newSenha) {

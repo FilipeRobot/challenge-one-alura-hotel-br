@@ -28,6 +28,11 @@ public class ReservaController implements AutoCloseable {
         return service.buscarReservas();
     }
 
+    public void deletarReserva(Long id) {
+        Reserva reserva = buscarReserva(id);
+        service.deletarReserva(reserva);
+    }
+
     @Override
     public void close() {
         service.close();
