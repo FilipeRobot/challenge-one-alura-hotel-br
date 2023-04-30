@@ -1,7 +1,5 @@
 package com.github.FilipeRobot.view;
 
-import com.github.FilipeRobot.controller.HotelController;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;

@@ -1,63 +1,80 @@
 package com.github.FilipeRobot.controller;
 
-import com.github.FilipeRobot.model.Hospede;
-import com.github.FilipeRobot.model.Reserva;
+import com.github.FilipeRobot.model.DTO.DadosCompletosHospede;
+import com.github.FilipeRobot.model.DTO.DadosCompletosReserva;
+import com.github.FilipeRobot.model.DTO.DadosHospede;
+import com.github.FilipeRobot.model.DTO.DadosReserva;
 import com.github.FilipeRobot.model.Usuario;
+import com.github.FilipeRobot.service.HospedeService;
+import com.github.FilipeRobot.service.ReservaService;
+import com.github.FilipeRobot.service.UsuarioService;
 import com.github.FilipeRobot.utils.JPAUtils;
 
 import javax.persistence.EntityManager;
+import java.util.Calendar;
 import java.util.List;
 
-public class HotelController implements AutoCloseable {
-    private final EntityManager entityManager;
-
-    // TODO desenvolver mais usos para o loginController, como cadastro de usuário e mudar senha
-    private LoginController loginController = null;
-    private final ReservaController reservaController;
-    private final HospedeController hospedeController;
+public class HotelController {
+    private final UsuarioService usuarioService;
+    private final ReservaService reservaService;
+    private final HospedeService hospedeService;
 
     public HotelController() {
-        this.entityManager = JPAUtils.getEntityManager();
-        this.reservaController = new ReservaController(entityManager);
-        this.hospedeController = new HospedeController(entityManager);
+        EntityManager entityManager = JPAUtils.getEntityManager();
+        this.usuarioService = new UsuarioService(entityManager);
+        this.reservaService = new ReservaService(entityManager);
+        this.hospedeService = new HospedeService(entityManager);
     }
 
-    @Override
-    public void close() throws Exception {
-        System.out.println("Executou close");
-        entityManager.close();
+    public void login(String loginInformado, String senhaInformada) {
+        Usuario usuario = usuarioService.buscarPorLogin(loginInformado);
+
+        if (!usuario.getSenha().equals(senhaInformada)){
+            throw new RuntimeException("Senha informada é invalida");
+        }
     }
 
-    public boolean login(String loginInformado, String senhaInformada) {
-        Usuario usuario;
-
-        this.loginController = new LoginController(entityManager);
-        usuario = loginController.buscarUsuario(loginInformado, senhaInformada);
-
-        return usuario != null;
+    public Long registrarReserva(DadosReserva dadosReserva) {
+        return reservaService.registrar(dadosReserva);
     }
 
-    public List<Reserva> buscarReservas() {
-        return reservaController.buscarReservas();
+    public int calcularValorReserva(Calendar dataEntrada, Calendar dataSaida) {
+        return reservaService.calcularValor(dataEntrada, dataSaida);
     }
 
-    public Reserva buscarReservaPorId(long idReserva) {
-        return reservaController.buscarReserva(idReserva);
+    public List<DadosCompletosReserva> buscarReservas() {
+        return reservaService.buscarReservas();
     }
 
-    public List<Hospede> buscarHospedes() {
-        return hospedeController.buscarTodos();
+    public DadosCompletosReserva buscarReservaPorId(long idReserva) {
+        return reservaService.buscarPorID(idReserva);
     }
 
-    public List<Hospede> buscarHospedePorSobrenome(String sobrenome) {
-        return hospedeController.buscarPorSobrenome(sobrenome);
+    public void editarReserva(String id, DadosReserva dadosReserva) {
+        reservaService.editarReserva(Long.valueOf(id), dadosReserva);
     }
 
     public void deletarReserva(Long id) {
-        reservaController.deletarReserva(id);
+        reservaService.deletarReserva(id);
+    }
+
+    public void registrarHospede(DadosHospede dadosHospede) {
+        hospedeService.registrar(dadosHospede);
+    }
+
+    public List<DadosCompletosHospede> buscarHospedes() {
+        return hospedeService.buscarTodos();
+    }
+
+    public List<DadosCompletosHospede> buscarHospedePorSobrenome(String sobrenome) {
+        return hospedeService.buscarPorSobrenome(sobrenome);
+    }
+
+    public void editarHospede(String id, DadosHospede dados) {
+        hospedeService.editarHospede(Long.valueOf(id), dados);
     }
 
     public void deletarHospede(Long id) {
-        hospedeController.deletarHospede(id);
+        hospedeService.deletarHospede(id);
     }
 }

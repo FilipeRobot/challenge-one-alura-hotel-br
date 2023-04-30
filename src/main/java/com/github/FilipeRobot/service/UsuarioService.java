@@ -2,19 +2,13 @@ package com.github.FilipeRobot.service;
 
 import com.github.FilipeRobot.dao.UsuarioDAO;
 import com.github.FilipeRobot.model.Usuario;
-import com.github.FilipeRobot.utils.JPAUtils;
 
 import javax.persistence.EntityManager;
 
-public class UsuarioService implements AutoCloseable {
+public class UsuarioService {
     private final EntityManager entityManager;
 
     private final UsuarioDAO usuarioDAO;
-
-    public UsuarioService() {
-        this.entityManager = JPAUtils.getEntityManager();
-        this.usuarioDAO = new UsuarioDAO(this.entityManager);
-    }
 
     public UsuarioService(EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -56,10 +50,5 @@ public class UsuarioService implements AutoCloseable {
         this.entityManager.getTransaction().begin();
         usuarioDAO.deletarUsuario(usuario);
         this.entityManager.getTransaction().commit();
-    }
-
-    @Override
-    public void close() {
-        entityManager.close();
     }
 }

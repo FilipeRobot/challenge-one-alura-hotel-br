@@ -1,10 +1,10 @@
 package com.github.FilipeRobot.view;
 
-import com.github.FilipeRobot.controller.HospedeController;
 import com.github.FilipeRobot.controller.HotelController;
-import com.github.FilipeRobot.controller.ReservaController;
-import com.github.FilipeRobot.model.Hospede;
-import com.github.FilipeRobot.model.Reserva;
+import com.github.FilipeRobot.model.DTO.DadosCompletosHospede;
+import com.github.FilipeRobot.model.DTO.DadosCompletosReserva;
+import com.github.FilipeRobot.model.DTO.DadosHospede;
+import com.github.FilipeRobot.model.DTO.DadosReserva;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -13,17 +13,14 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.io.Serial;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@SuppressWarnings("serial")
 public class Buscar extends JFrame {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     private JPanel contentPane;
     private JTextField txtBuscar;
     private JTable tbHospedes;
@@ -212,9 +209,6 @@ public class Buscar extends JFrame {
                 clearTable(modelo);
                 clearTable(modeloHospedes);
 
-                /* TODO atualmente uma das maiores motivações para usar um controller único
-                    no projeto, junto com o gerenciamento da quantidade de Entidades/Conexões com o banco de dados*/
-
                 switch (panel.getSelectedIndex()) {
                     case 0 -> preencherTabelaDeReservas();
                     case 1 -> preencherTabelaDeHospedes();
@@ -236,6 +230,16 @@ public class Buscar extends JFrame {
         lblBuscar.setFont(new Font("Roboto", Font.PLAIN, 18));
 
         JPanel btnEditar = new JPanel();
+        btnEditar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                switch (panel.getSelectedIndex()) {
+                    case 0 -> editarReserva();
+                    case 1 -> editarHospede();
+                    default -> throw new RuntimeException("Opção invalida");
+                }
+            }
+        });
         btnEditar.setLayout(null);
         btnEditar.setBackground(new Color(12, 138, 199));
         btnEditar.setBounds(635, 508, 122, 35);
@@ -253,7 +257,6 @@ public class Buscar extends JFrame {
         btnDeletar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
                 switch (panel.getSelectedIndex()) {
                     case 0 -> deletarReserva();
                     case 1 -> deletarHospede();
@@ -275,6 +278,50 @@ public class Buscar extends JFrame {
         btnDeletar.add(lblExcluir);
         setResizable(false);
         hotelController = new HotelController();
+    }
+
+    private void editarHospede() {
+        int selectedRow = tbHospedes.getSelectedRow();
+        if (selectedRow > -1) {
+            String id = modeloHospedes.getValueAt(selectedRow, 0).toString();
+            String nome = modeloHospedes.getValueAt(selectedRow, 1).toString();
+            String sobrenome = modeloHospedes.getValueAt(selectedRow, 2).toString();
+            String dataN = modeloHospedes.getValueAt(selectedRow, 3).toString();
+            String nacionalidade = modeloHospedes.getValueAt(selectedRow, 4).toString();
+            String telefone = modeloHospedes.getValueAt(selectedRow, 5).toString();
+            String reserva = modeloHospedes.getValueAt(selectedRow, 6).toString();
+
+            var dados = new DadosHospede(
+                    nome,
+                    sobrenome,
+                    LocalDate.parse(dataN),
+                    nacionalidade,
+                    telefone,
+                    Long.valueOf(reserva)
+            );
+
+            hotelController.editarHospede(id, dados);
+        }
+    }
+
+    private void editarReserva() {
+        int selectedRow = tbReservas.getSelectedRow();
+        if (selectedRow > -1) {
+            String id = modelo.getValueAt(selectedRow, 0).toString();
+            String dataEntrada = modelo.getValueAt(selectedRow, 1).toString();
+            String dataSaida = modelo.getValueAt(selectedRow, 2).toString();
+            String valor = modelo.getValueAt(selectedRow, 3).toString();
+            String formaDePagamento = modelo.getValueAt(selectedRow, 4).toString();
+
+            var dados = new DadosReserva(
+                    LocalDate.parse(dataEntrada),
+                    LocalDate.parse(dataSaida),
+                    new BigDecimal(valor),
+                    formaDePagamento
+            );
+
+            hotelController.editarReserva(id, dados);
+        }
     }
 
     private void deletarHospede() {
@@ -302,98 +349,62 @@ public class Buscar extends JFrame {
 
         try {
             if (sobrenome.isBlank()) {
-                List<Hospede> hospedes = hotelController.buscarHospedes();
+                List<DadosCompletosHospede> hospedes = hotelController.buscarHospedes();
                 AtomicInteger item = new AtomicInteger();
                 hospedes.forEach(hospede -> {
                     modeloHospedes.insertRow(item.getAndIncrement(), new Object[]{
-                            hospede.getId(),
-                            hospede.getNome(),
-                            hospede.getSobrenome(),
-                            hospede.getDataNascimento(),
-                            hospede.getNacionalidade(),
-                            hospede.getTelefone(),
-                            hospede.getReserva()
+                            hospede.id(),
+                            hospede.nome(),
+                            hospede.sobrenome(),
+                            hospede.dataNascimento(),
+                            hospede.nacionalidade(),
+                            hospede.telefone(),
+                            hospede.reserva()
                     });
                 });
             } else {
-                List<Hospede> hospedes = hotelController.buscarHospedePorSobrenome(sobrenome);
+                List<DadosCompletosHospede> hospedes = hotelController.buscarHospedePorSobrenome(sobrenome);
                 AtomicInteger item = new AtomicInteger();
                 hospedes.forEach(hospede -> {
                     modeloHospedes.insertRow(item.getAndIncrement(), new Object[]{
-                            hospede.getId(),
-                            hospede.getNome(),
-                            hospede.getSobrenome(),
-                            hospede.getDataNascimento(),
-                            hospede.getNacionalidade(),
-                            hospede.getTelefone(),
-                            hospede.getReserva()
+                            hospede.id(),
+                            hospede.nome(),
+                            hospede.sobrenome(),
+                            hospede.dataNascimento(),
+                            hospede.nacionalidade(),
+                            hospede.telefone(),
+                            hospede.reserva()
                     });
                 });
             }
         } catch (Exception exception) {
             JOptionPane.showMessageDialog(this, exception.getMessage());
         }
-
-        // TODO Apagar comentário abaixo no caso de decidir usar controller único
-
-//        try (HospedeController hospedeController = new HospedeController()){
-//
-//            if (sobrenome.isBlank()) {
-//                List<Hospede> hospedes = hospedeController.buscarTodos();
-//                AtomicInteger item = new AtomicInteger();
-//                hospedes.forEach(hospede -> {
-//                    modeloHospedes.insertRow(item.getAndIncrement(), new Object[]{
-//                            hospede.getId(),
-//                            hospede.getNome(),
-//                            hospede.getSobrenome(),
-//                            hospede.getDataNascimento(),
-//                            hospede.getNacionalidade(),
-//                            hospede.getTelefone(),
-//                            hospede.getReserva()
-//                    });
-//                });
-//            } else {
-//
-//                List<Hospede> hospedes = hospedeController.buscarPorSobrenome(sobrenome);
-//                AtomicInteger item = new AtomicInteger();
-//                hospedes.forEach(hospede -> {
-//                    modeloHospedes.insertRow(item.getAndIncrement(), new Object[]{
-//                            hospede.getId(),
-//                            hospede.getNome(),
-//                            hospede.getSobrenome(),
-//                            hospede.getDataNascimento(),
-//                            hospede.getNacionalidade(),
-//                            hospede.getTelefone(),
-//                            hospede.getReserva()
-//                    });
-//                });
-//            }
-//        }
     }
 
     private void preencherTabelaDeReservas() {
         try {
             if (txtBuscar.getText().trim().isBlank()) {
-                List<Reserva> reservas = hotelController.buscarReservas();
+                List<DadosCompletosReserva> reservas = hotelController.buscarReservas();
                 AtomicInteger item = new AtomicInteger();
                 reservas.forEach(reserva -> {
                     modelo.insertRow(item.getAndIncrement(), new Object[]{
-                            reserva.getId(),
-                            reserva.getDataEntrada(),
-                            reserva.getDataSaida(),
-                            reserva.getValor(),
-                            reserva.getFormaPagamento()
+                            reserva.id(),
+                            reserva.dataEntrada(),
+                            reserva.dataSaida(),
+                            reserva.valor(),
+                            reserva.formaPagamento()
                     });
                 });
             } else {
                 long idReserva = Long.parseLong(txtBuscar.getText().trim());
-                Reserva reserva = hotelController.buscarReservaPorId(idReserva);
+                DadosCompletosReserva reserva = hotelController.buscarReservaPorId(idReserva);
                 modelo.insertRow(0, new Object[]{
-                        reserva.getId(),
-                        reserva.getDataEntrada(),
-                        reserva.getDataSaida(),
-                        reserva.getValor(),
-                        reserva.getFormaPagamento()
+                        reserva.id(),
+                        reserva.dataEntrada(),
+                        reserva.dataSaida(),
+                        reserva.valor(),
+                        reserva.formaPagamento()
                 });
             }
         }catch (NumberFormatException e) {
@@ -404,36 +415,6 @@ public class Buscar extends JFrame {
             exception.printStackTrace();
             JOptionPane.showMessageDialog(this, exception.getMessage());
         }
-
-        // TODO Apagar comentário abaixo no caso de decidir usar controller único
-
-//        try (ReservaController reservaController = new ReservaController()) {
-//            if (txtBuscar.getText().trim().isBlank()) {
-//                List<Reserva> reservas = reservaController.buscar(); // Buscar lista de reservas do banco de dados
-//                AtomicInteger item = new AtomicInteger();
-//                reservas.forEach(reserva -> {
-//                    modelo.insertRow(item.getAndIncrement(), new Object[]{
-//                            reserva.getId(),
-//                            reserva.getDataEntrada(),
-//                            reserva.getDataSaida(),
-//                            reserva.getValor(),
-//                            reserva.getFormaPagamento()
-//                    });
-//                });
-//            } else {
-//                long idReserva = Long.parseLong(txtBuscar.getText().trim());
-//                Reserva reserva = reservaController.buscarReserva(idReserva);
-//                modelo.insertRow(0, new Object[]{
-//                        reserva.getId(),
-//                        reserva.getDataEntrada(),
-//                        reserva.getDataSaida(),
-//                        reserva.getValor(),
-//                        reserva.getFormaPagamento()
-//                });
-//            }
-//        } catch (Exception exception) {
-//            exception.printStackTrace();
-//        }
     }
 
     private void clearTable(DefaultTableModel modelo) {

@@ -1,5 +1,8 @@
 package com.github.FilipeRobot.model;
 
+import com.github.FilipeRobot.model.DTO.DadosHospede;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -7,6 +10,8 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "hospedes")
+@NoArgsConstructor
+@Getter
 @ToString
 public class Hospede {
     @Id
@@ -21,43 +26,21 @@ public class Hospede {
     @Column(name = "id_reserva")
     private Long reserva;
 
-    public Hospede() {
+    public Hospede(DadosHospede dados) {
+        this.nome = dados.nome();
+        this.sobrenome = dados.sobrenome();
+        this.dataNascimento = dados.dataNascimento();
+        this.nacionalidade = dados.nacionalidade();
+        this.telefone = dados.telefone();
+        this.reserva = dados.reserva();
     }
 
-    public Hospede(String nome, String sobrenome, LocalDate dataNascimento, String nacionalidade, String telefone, Long reserva) {
-        this.nome = nome;
-        this.sobrenome = sobrenome;
-        this.dataNascimento = dataNascimento;
-        this.nacionalidade = nacionalidade;
-        this.telefone = telefone;
-        this.reserva = reserva;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public String getSobrenome() {
-        return sobrenome;
-    }
-
-    public LocalDate getDataNascimento() {
-        return dataNascimento;
-    }
-
-    public String getNacionalidade() {
-        return nacionalidade;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public Long getReserva() {
-        return reserva;
+    public void atualizarDados(DadosHospede dados) {
+        this.nome = dados.nome();
+        this.sobrenome = dados.sobrenome();
+        this.dataNascimento = dados.dataNascimento();
+        this.nacionalidade = dados.nacionalidade();
+        this.telefone = dados.telefone();
+        this.reserva = dados.reserva();
     }
 }

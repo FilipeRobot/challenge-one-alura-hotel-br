@@ -1,7 +1,7 @@
 package com.github.FilipeRobot.view;
 
-import com.github.FilipeRobot.controller.HospedeController;
-import com.github.FilipeRobot.model.Hospede;
+import com.github.FilipeRobot.controller.HotelController;
+import com.github.FilipeRobot.model.DTO.DadosHospede;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
@@ -12,10 +12,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.Serial;
 import java.text.Format;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Objects;
 
+@SuppressWarnings("serial")
 public class RegistroHospede extends JFrame {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -29,6 +28,7 @@ public class RegistroHospede extends JFrame {
     private JLabel labelExit;
     private JLabel labelAtras;
     int xMouse, yMouse;
+    private static HotelController hotelController;
 
     /**
      * Launch the application.
@@ -313,22 +313,29 @@ public class RegistroHospede extends JFrame {
         logo.setBounds(194, 39, 104, 107);
         panel.add(logo);
         logo.setIcon(new ImageIcon(Objects.requireNonNull(RegistroHospede.class.getResource("/img/Ha-100px.png"))));
+        hotelController = new HotelController();
     }
 
     private void registrarHospede() {
-        LocalDate dataNascimento = txtDataN.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        String nacionalidade = txtNacionalidade.getModel().getSelectedItem().toString();
-        Hospede hospede = new Hospede(
+        DadosHospede.validar(
                 txtNome.getText(),
                 txtSobrenome.getText(),
-                dataNascimento,
-                nacionalidade,
+                txtDataN.getDate(),
+                txtNacionalidade.getModel().getSelectedItem().toString(),
                 txtTelefone.getText(),
-                Long.parseLong(txtNreserva.getText())
+                txtNreserva.getText()
         );
-        try (HospedeController hospedeController = new HospedeController()) {
-            hospedeController.registrar(hospede);
-        }
+
+        DadosHospede dadosHospede = new DadosHospede(
+                txtNome.getText(),
+                txtSobrenome.getText(),
+                txtDataN.getDate(),
+                txtNacionalidade.getModel().getSelectedItem().toString(),
+                txtTelefone.getText(),
+                txtNreserva.getText()
+        );
+
+        hotelController.registrarHospede(dadosHospede);
     }
 
     //Código que permite movimentar a janela pela tela seguindo a posição de "x" y "y"

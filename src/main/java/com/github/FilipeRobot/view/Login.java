@@ -17,8 +17,7 @@ public class Login extends JFrame {
     private JPasswordField txtSenha;
     int xMouse, yMouse;
     private JLabel labelExit;
-
-//    private final LoginController controleLogin;
+    private final HotelController hotelController;
 
     /**
      * Launch the application.
@@ -222,7 +221,7 @@ public class Login extends JFrame {
         header.setBounds(0, 0, 784, 36);
         panel.add(header);
         header.setLayout(null);
-        //controleLogin = new LoginController();
+        hotelController = new HotelController();
     }
 
     private void fechar(MouseEvent e) {
@@ -234,23 +233,20 @@ public class Login extends JFrame {
                 JOptionPane.INFORMATION_MESSAGE);
 
         if (sair == 0) {
-//            controleLogin.close();
             System.exit(0);
         }
     }
 
     private void Entrar() {
-        // TODO pensamento sobre o projeto, usar controller único, ou controllers separados
         String senhaInformada = new String (txtSenha.getPassword());
         String loginInformado = txtUsuario.getText().trim();
 
-        try (HotelController hotelController = new HotelController()) {
-//            controleLogin.buscarUsuario(loginInformado, senhaInformada);
-            if(hotelController.login(loginInformado, senhaInformada)) {
-                MenuUsuario menu = new MenuUsuario();
-                menu.setVisible(true);
-                dispose();
-            }
+        try {
+            hotelController.login(loginInformado, senhaInformada);
+
+            MenuUsuario menu = new MenuUsuario();
+            menu.setVisible(true);
+            dispose();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
