@@ -16,14 +16,6 @@ public class UsuarioDAO {
         entityManager.persist(usuario);
     }
 
-    public Usuario buscarPorID(Long id){
-        Usuario usuario = entityManager.find(Usuario.class, id);
-        if (usuario == null) {
-            throw new NoResultException("Usuário não encontrado");
-        }
-        return usuario;
-    }
-
     public Usuario buscarPorLogin(String login) {
         String jpql = "SELECT u FROM Usuario u WHERE u.login LIKE :login";
 
@@ -36,12 +28,16 @@ public class UsuarioDAO {
         }
     }
 
-    public void editarUsuario(Usuario usuario){
-        entityManager.merge(usuario);
-    }
+    public boolean usuarioExiste(String login) {
+        String jpql = "SELECT u.login FROM Usuario u WHERE u.login LIKE :login";
 
-    public void deletarUsuario(Usuario usuario) {
-        usuario = entityManager.merge(usuario);
-        entityManager.remove(usuario);
+        try {
+            entityManager.createQuery(jpql, String.class)
+                    .setParameter("login", login)
+                    .getSingleResult();
+            return true;
+        } catch (NoResultException exception) {
+            return false;
+        }
     }
 }

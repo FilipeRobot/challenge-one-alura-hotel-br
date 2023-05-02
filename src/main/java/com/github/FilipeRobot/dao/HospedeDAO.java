@@ -17,7 +17,7 @@ public class HospedeDAO {
         entityManager.persist(hospede);
     }
 
-    public Hospede buscarPorID(Long id){
+    public Hospede buscarPorID(Long id) {
         Hospede hospede = entityManager.find(Hospede.class, id);
         if (hospede == null) {
             throw new NoResultException("Usuário não encontrado");
@@ -50,12 +50,7 @@ public class HospedeDAO {
         }
     }
 
-    public void editarHospede(Hospede hospede){
-        entityManager.merge(hospede);
-    }
-
     public void deletarHospede(Hospede hospede) {
-        hospede = entityManager.merge(hospede);
         entityManager.remove(hospede);
     }
 }

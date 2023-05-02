@@ -8,6 +8,7 @@ import java.util.List;
 
 public record DadosReserva(LocalDate dataEntrada, LocalDate dataSaida, BigDecimal valor, String formaPagamento) {
     private static final List<String> formasDePagamento = List.of("Cartão de Crédito", "Cartão de Débito", "Dinheiro");
+
     public DadosReserva(Date dataEntrada, Date dataSaida, int valor, String formaPagamento) {
         this(
                 dataEntrada.toInstant().atZone(ZoneId.of("-03:00")).toLocalDate(),
@@ -17,7 +18,7 @@ public record DadosReserva(LocalDate dataEntrada, LocalDate dataSaida, BigDecima
         );
     }
 
-    public static void validar(Date dataEntrada, Date dataSaida, int valor, String formaPagamento){
+    public static void validar(Date dataEntrada, Date dataSaida, int valor, String formaPagamento) {
         if (dataEntrada == null) {
             throw new RuntimeException("Data de entrada não informada!");
         }

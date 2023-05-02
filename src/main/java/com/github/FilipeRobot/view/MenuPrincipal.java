@@ -170,21 +170,14 @@ public class MenuPrincipal extends JFrame {
         lblLogin.setForeground(SystemColor.textHighlight);
         lblLogin.setFont(new Font("Roboto Light", Font.PLAIN, 20));
 
-        JLabel lblCadastrar = new JLabel("CADASTRAR");
-        lblCadastrar.setHorizontalAlignment(SwingConstants.CENTER);
-        lblCadastrar.setForeground(SystemColor.textHighlight);
-        lblCadastrar.setFont(new Font("Dialog", Font.PLAIN, 20));
-        lblCadastrar.setBackground(Color.WHITE);
-        lblCadastrar.setBounds(773, 265, 127, 24);
-        panel.add(lblCadastrar);
-
+        // Botao Cadastrar
         JPanel btnCadastrar = new JPanel();
         btnCadastrar.setBounds(799, 291, 80, 70);
         btnCadastrar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // TODO Criar view de cadastro de usuário
-                System.out.println("Abrir tela de cadastro de usuário");
+                CadastrarUsuario cadastrar = new CadastrarUsuario();
+                cadastrar.setVisible(true);
             }
         });
         btnCadastrar.setLayout(null);
@@ -196,8 +189,15 @@ public class MenuPrincipal extends JFrame {
         imageCadastrar.setBounds(0, 0, 80, 70);
         btnCadastrar.add(imageCadastrar);
         imageCadastrar.setHorizontalAlignment(SwingConstants.CENTER);
-        // TODO Mudar a imagem para uma que represente o botão de cadastrar
-        imageCadastrar.setIcon(new ImageIcon(Objects.requireNonNull(MenuPrincipal.class.getResource("/img/login.png"))));
+        imageCadastrar.setIcon(new ImageIcon(Objects.requireNonNull(MenuPrincipal.class.getResource("/img/cadastro.png"))));
+
+        JLabel lblCadastrar = new JLabel("CADASTRAR");
+        lblCadastrar.setBounds(773, 265, 127, 24);
+        lblCadastrar.setBackground(SystemColor.window);
+        panel.add(lblCadastrar);
+        lblCadastrar.setHorizontalAlignment(SwingConstants.CENTER);
+        lblCadastrar.setForeground(SystemColor.textHighlight);
+        lblCadastrar.setFont(new Font("Roboto Light", Font.PLAIN, 20));
     }
 
     private void fechar(MouseEvent evt) {

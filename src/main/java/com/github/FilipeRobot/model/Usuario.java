@@ -1,26 +1,26 @@
 package com.github.FilipeRobot.model;
 
+import com.github.FilipeRobot.model.DTO.DadosUsuario;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
-@Getter @Setter
+@Getter
 @ToString
 public class Usuario {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String login;
     private String senha;
 
-    public Usuario(String login, String senha) {
-        this.login = login;
-        this.senha = senha;
+    public Usuario(DadosUsuario dados) {
+        this.login = dados.login();
+        this.senha = dados.senha();
     }
 }

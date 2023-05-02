@@ -1,10 +1,6 @@
 package com.github.FilipeRobot.controller;
 
-import com.github.FilipeRobot.model.DTO.DadosCompletosHospede;
-import com.github.FilipeRobot.model.DTO.DadosCompletosReserva;
-import com.github.FilipeRobot.model.DTO.DadosHospede;
-import com.github.FilipeRobot.model.DTO.DadosReserva;
-import com.github.FilipeRobot.model.Usuario;
+import com.github.FilipeRobot.model.DTO.*;
 import com.github.FilipeRobot.service.HospedeService;
 import com.github.FilipeRobot.service.ReservaService;
 import com.github.FilipeRobot.service.UsuarioService;
@@ -26,12 +22,12 @@ public class HotelController {
         this.hospedeService = new HospedeService(entityManager);
     }
 
-    public void login(String loginInformado, String senhaInformada) {
-        Usuario usuario = usuarioService.buscarPorLogin(loginInformado);
+    public void login(DadosUsuario usuario) {
+        usuarioService.login(usuario);
+    }
 
-        if (!usuario.getSenha().equals(senhaInformada)){
-            throw new RuntimeException("Senha informada é invalida");
-        }
+    public void cadastrar(DadosUsuario dados, String senhaConfirmacao) {
+        usuarioService.registrar(dados, senhaConfirmacao);
     }
 
     public Long registrarReserva(DadosReserva dadosReserva) {

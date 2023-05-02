@@ -1,6 +1,7 @@
 package com.github.FilipeRobot.service;
 
 import com.github.FilipeRobot.dao.UsuarioDAO;
+import com.github.FilipeRobot.model.DTO.DadosUsuario;
 import com.github.FilipeRobot.model.Usuario;
 
 import javax.persistence.EntityManager;
@@ -15,40 +16,47 @@ public class UsuarioService {
         this.usuarioDAO = new UsuarioDAO(this.entityManager);
     }
 
-    public void registrar(Usuario usuario) {
-        if (usuario.getLogin().trim().isEmpty()) {
-            throw new RuntimeException("Usuário não informado!");
-        }
-        if (usuario.getSenha().trim().isEmpty()) {
-            throw new RuntimeException("Senha não informada!");
+    public void registrar(DadosUsuario dados, String senhaConfirmacao) {
+        if (dados.login().equals("Digite seu nome de usuário") || dados.login().isBlank()) {
+            throw new RuntimeException("Nome de usuário não informado.");
         }
 
+        if (dados.senha().equals("********") || dados.senha().isBlank()) {
+            throw new RuntimeException("Senha não informada.");
+        }
+
+        if (senhaConfirmacao.equals("********") || senhaConfirmacao.isBlank()) {
+            throw new RuntimeException("Senha de confirmação não informada.");
+        }
+
+        if (!dados.senha().equals(senhaConfirmacao)) {
+            throw new RuntimeException("Senha de confirmação é diferente da senha informada, verifique as informações novamente.");
+        }
+
+        if (usuarioDAO.usuarioExiste(dados.login())) {
+            throw new RuntimeException("Usuário já existe!");
+        }
+
         this.entityManager.getTransaction().begin();
 
-        usuarioDAO.registrar(usuario);
+        usuarioDAO.registrar(new Usuario(dados));
 
         this.entityManager.getTransaction().commit();
     }
 
-    public Usuario buscarPorID(Long id) {
-        return usuarioDAO.buscarPorID(id);
-    }
+    public void login(DadosUsuario dados) {
+        if (dados.login().equals("Digite seu nome de usuário") || dados.login().isBlank()) {
+            throw new RuntimeException("Nome de usuário não informado");
+        }
 
-    public Usuario buscarPorLogin(String login) {
-        return usuarioDAO.buscarPorLogin(login);
-    }
+        if (dados.senha().equals("********") || dados.senha().isBlank()) {
+            throw new RuntimeException("Senha não informada");
+        }
 
-    public void editar(Usuario usuario, String newLogin, String newSenha) {
-        this.entityManager.getTransaction().begin();
-        usuarioDAO.editarUsuario(usuario);
-        usuario.setLogin(newLogin);
-        usuario.setSenha(newSenha);
-        this.entityManager.getTransaction().commit();
-    }
+        DadosUsuario usuario = new DadosUsuario(usuarioDAO.buscarPorLogin(dados.login()));
 
-    public void deletar(Usuario usuario) {
-        this.entityManager.getTransaction().begin();
-        usuarioDAO.deletarUsuario(usuario);
-        this.entityManager.getTransaction().commit();
+        if (!dados.senha().equals(usuario.senha())) {
+            throw new RuntimeException("Senha informada é invalida");
+        }
     }
 }

@@ -4,7 +4,8 @@ import com.github.FilipeRobot.model.Hospede;
 
 import java.time.LocalDate;
 
-public record DadosCompletosHospede(Long id, String nome, String sobrenome, LocalDate dataNascimento, String nacionalidade, String telefone, Long reserva) {
+public record DadosCompletosHospede(Long id, String nome, String sobrenome, LocalDate dataNascimento,
+                                    String nacionalidade, String telefone, Long reserva) {
     public DadosCompletosHospede(Hospede hospede) {
         this(
                 hospede.getId(),

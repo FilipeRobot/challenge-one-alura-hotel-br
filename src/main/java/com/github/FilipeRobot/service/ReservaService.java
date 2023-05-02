@@ -41,6 +41,7 @@ public class ReservaService {
                 .map(DadosCompletosReserva::new)
                 .toList();
     }
+
     public void editarReserva(Long id, DadosReserva dados) {
         Reserva reserva = reservaDAO.buscarPorID(id);
         this.entityManager.getTransaction().begin();

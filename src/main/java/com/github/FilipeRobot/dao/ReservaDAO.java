@@ -35,12 +35,7 @@ public class ReservaDAO {
         }
     }
 
-    public void editarReserva(Reserva reserva){
-        entityManager.merge(reserva);
-    }
-
     public void deletarReserva(Reserva reserva) {
-        reserva = entityManager.merge(reserva);
         entityManager.remove(reserva);
     }
 }

@@ -8,17 +8,15 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import java.util.Objects;
 
 @SuppressWarnings("serial")
-public class Login extends JFrame {
+public class CadastrarUsuario extends JFrame {
     private JPanel contentPane;
     private JTextField txtUsuario;
     private JPasswordField txtSenha;
+    private JPasswordField txtConfirmarSenha;
     int xMouse, yMouse;
     private JLabel labelExit;
-    private JLabel labelAtras;
     private final HotelController hotelController;
 
     /**
@@ -28,7 +26,7 @@ public class Login extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    Login frame = new Login();
+                    CadastrarUsuario frame = new CadastrarUsuario();
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -40,11 +38,11 @@ public class Login extends JFrame {
     /**
      * Create the frame.
      */
-    public Login() {
+    public CadastrarUsuario() {
         setResizable(false);
         setUndecorated(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 788, 527);
+        setBounds(100, 100, 420, 527);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
@@ -53,29 +51,18 @@ public class Login extends JFrame {
 
 
         JPanel panel = new JPanel();
-        panel.setBounds(0, 0, 788, 527);
+        panel.setBounds(0, 0, 420, 527);
         panel.setBackground(Color.WHITE);
         contentPane.add(panel);
         panel.setLayout(null);
 
-        JPanel panel_1 = new JPanel();
-        panel_1.setBackground(new Color(12, 138, 199));
-        panel_1.setBounds(484, 0, 304, 527);
-        panel.add(panel_1);
-        panel_1.setLayout(null);
-
-        JLabel imgHotel = new JLabel("");
-        imgHotel.setBounds(0, 0, 304, 538);
-        panel_1.add(imgHotel);
-        imgHotel.setIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/img/img-hotel-login-.png"))));
-
         JPanel btnexit = new JPanel();
-        btnexit.setBounds(251, 0, 53, 36);
-        panel_1.add(btnexit);
+        btnexit.setBounds(367, 0, 53, 36);
+        panel.add(btnexit);
         btnexit.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                fechar(e);
+                dispose();
             }
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -117,24 +104,24 @@ public class Login extends JFrame {
         txtUsuario.setText("Digite seu nome de usuário");
         txtUsuario.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         txtUsuario.setForeground(SystemColor.activeCaptionBorder);
-        txtUsuario.setBounds(65, 256, 324, 32);
+        txtUsuario.setBounds(65, 139, 324, 32);
         panel.add(txtUsuario);
         txtUsuario.setColumns(10);
 
         JSeparator separator = new JSeparator();
         separator.setBackground(new Color(0, 120, 215));
-        separator.setBounds(65, 292, 324, 2);
+        separator.setBounds(65, 175, 324, 2);
         panel.add(separator);
 
-        JLabel labelTitulo = new JLabel("LOGIN");
+        JLabel labelTitulo = new JLabel("CADASTRO");
         labelTitulo.setForeground(SystemColor.textHighlight);
         labelTitulo.setFont(new Font("Roboto Black", Font.PLAIN, 26));
-        labelTitulo.setBounds(196, 150, 89, 26);
+        labelTitulo.setBounds(140, 65, 155, 26);
         panel.add(labelTitulo);
 
         JSeparator separator_1 = new JSeparator();
         separator_1.setBackground(SystemColor.textHighlight);
-        separator_1.setBounds(65, 393, 324, 2);
+        separator_1.setBounds(65, 276, 324, 2);
         panel.add(separator_1);
 
         txtSenha = new JPasswordField();
@@ -155,146 +142,99 @@ public class Login extends JFrame {
         txtSenha.setForeground(SystemColor.activeCaptionBorder);
         txtSenha.setFont(new Font("Roboto", Font.PLAIN, 16));
         txtSenha.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-        txtSenha.setBounds(65, 353, 324, 32);
+        txtSenha.setBounds(65, 236, 324, 32);
         panel.add(txtSenha);
 
+        txtConfirmarSenha = new JPasswordField();
+        txtConfirmarSenha.setText("********");
+        txtConfirmarSenha.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (String.valueOf(txtConfirmarSenha.getPassword()).equals("********")) {
+                    txtConfirmarSenha.setText("");
+                    txtConfirmarSenha.setForeground(Color.black);
+                }
+                if (txtUsuario.getText().isEmpty()) {
+                    txtUsuario.setText("Digite seu nome de usuário");
+                    txtUsuario.setForeground(Color.gray);
+                }
+            }
+        });
+        txtConfirmarSenha.setForeground(SystemColor.activeCaptionBorder);
+        txtConfirmarSenha.setFont(new Font("Roboto", Font.PLAIN, 16));
+        txtConfirmarSenha.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+        txtConfirmarSenha.setBounds(65, 336, 324, 32);
+        panel.add(txtConfirmarSenha);
+        
         JLabel LabelUsuario = new JLabel("USUÁRIO");
         LabelUsuario.setForeground(SystemColor.textInactiveText);
         LabelUsuario.setFont(new Font("Roboto Black", Font.PLAIN, 20));
-        LabelUsuario.setBounds(65, 219, 107, 26);
+        LabelUsuario.setBounds(65, 102, 107, 26);
         panel.add(LabelUsuario);
 
         JLabel lblSenha = new JLabel("SENHA");
         lblSenha.setForeground(SystemColor.textInactiveText);
         lblSenha.setFont(new Font("Roboto Black", Font.PLAIN, 20));
-        lblSenha.setBounds(65, 316, 140, 26);
+        lblSenha.setBounds(65, 199, 140, 26);
         panel.add(lblSenha);
+        
+        JLabel lblConfirmarSenha = new JLabel("CONFIRMAR SENHA");
+        lblConfirmarSenha.setForeground(SystemColor.textInactiveText);
+        lblConfirmarSenha.setFont(new Font("Dialog", Font.PLAIN, 20));
+        lblConfirmarSenha.setBounds(65, 299, 200, 26);
+        panel.add(lblConfirmarSenha);
 
-        JPanel btnLogin = new JPanel();
-        btnLogin.addMouseListener(new MouseAdapter() {
+        JPanel btnCadastrar = new JPanel();
+        btnCadastrar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                btnLogin.setBackground(new Color(0, 156, 223));
+                btnCadastrar.setBackground(new Color(0, 156, 223));
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                btnLogin.setBackground(SystemColor.textHighlight);
+                btnCadastrar.setBackground(SystemColor.textHighlight);
             }
             @Override
             public void mouseClicked(MouseEvent e) {
-                Entrar();
+                cadastrar();
             }
         });
-        btnLogin.setBackground(SystemColor.textHighlight);
-        btnLogin.setBounds(65, 431, 122, 44);
-        panel.add(btnLogin);
-        btnLogin.setLayout(null);
-        btnLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCadastrar.setBackground(SystemColor.textHighlight);
+        btnCadastrar.setBounds(65, 431, 140, 44);
+        panel.add(btnCadastrar);
+        btnCadastrar.setLayout(null);
+        btnCadastrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        JLabel lblEntrar = new JLabel("ENTRAR");
-        lblEntrar.setBounds(0, 0, 122, 44);
-        btnLogin.add(lblEntrar);
-        lblEntrar.setForeground(SystemColor.controlLtHighlight);
-        lblEntrar.setHorizontalAlignment(SwingConstants.CENTER);
-        lblEntrar.setFont(new Font("Roboto", Font.PLAIN, 18));
+        JLabel lblCadastrar = new JLabel("CADASTRAR");
+        lblCadastrar.setBounds(0, 0, 140, 44);
+        btnCadastrar.add(lblCadastrar);
+        lblCadastrar.setForeground(SystemColor.controlLtHighlight);
+        lblCadastrar.setHorizontalAlignment(SwingConstants.CENTER);
+        lblCadastrar.setFont(new Font("Roboto", Font.PLAIN, 18));
 
-        JLabel logo = new JLabel("");
-        logo.setHorizontalAlignment(SwingConstants.CENTER);
-        logo.setIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/img/lOGO-50PX.png"))));
-        logo.setBounds(65, 65, 48, 59);
-        panel.add(logo);
+        JSeparator separator_2 = new JSeparator();
+        separator_2.setBackground(SystemColor.textHighlight);
+        separator_2.setBounds(65, 379, 324, 2);
+        panel.add(separator_2);
 
         JPanel header = new JPanel();
-        header.setBounds(0, 0, 784, 36);
-        header.addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                headerMouseDragged(e);
-            }
-        });
-        header.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                headerMousePressed(e);
-            }
-        });
-        header.setLayout(null);
-        header.setBackground(SystemColor.window);
+        header.setBackground(new Color(12, 138, 199));
+        header.setBounds(0, 0, 420, 36);
         panel.add(header);
-
-        JPanel btnAtras = new JPanel();
-        btnAtras.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                MenuPrincipal menuPrincipal = new MenuPrincipal();
-                menuPrincipal.setVisible(true);
-                dispose();
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                btnAtras.setBackground(new Color(12, 138, 199));
-                labelAtras.setForeground(Color.white);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                btnAtras.setBackground(Color.white);
-                labelAtras.setForeground(Color.black);
-            }
-        });
-        btnAtras.setLayout(null);
-        btnAtras.setBackground(Color.WHITE);
-        btnAtras.setBounds(0, 0, 53, 36);
-        header.add(btnAtras);
-
-        labelAtras = new JLabel("<");
-        labelAtras.setBounds(0, 0, 53, 36);
-        btnAtras.add(labelAtras);
-        labelAtras.setHorizontalAlignment(SwingConstants.CENTER);
-        labelAtras.setFont(new Font("Roboto", Font.PLAIN, 23));
-
-        hotelController = null;//new HotelController();
+        header.setLayout(null);
+        hotelController = new HotelController();
     }
 
-    private void fechar(MouseEvent e) {
-        int sair = JOptionPane.showConfirmDialog(
-                this,
-                "Deseja fechar a aplicação?",
-                "Sair",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.INFORMATION_MESSAGE);
-
-        if (sair == 0) {
-            System.exit(0);
-        }
-    }
-
-    private void Entrar() {
+    private void cadastrar() {
         String senhaInformada = new String (txtSenha.getPassword());
+        String senhaConfirmacaoInformada = new String(txtConfirmarSenha.getPassword());
         String loginInformado = txtUsuario.getText().trim();
 
         try {
-            hotelController.login(new DadosUsuario(loginInformado, senhaInformada));
-
-            MenuUsuario menu = new MenuUsuario();
-            menu.setVisible(true);
-            dispose();
+            hotelController.cadastrar(new DadosUsuario(loginInformado, senhaInformada), senhaConfirmacaoInformada);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
-    }
-
-    //Código que permite movimentar a janela pela tela seguindo a posição de "x" e "y"
-    private void headerMousePressed(MouseEvent evt) {
-        xMouse = evt.getX();
-        yMouse = evt.getY();
-    }
-
-    private void headerMouseDragged(MouseEvent evt) {
-        int x = evt.getXOnScreen();
-        int y = evt.getYOnScreen();
-        this.setLocation(x - xMouse, y - yMouse);
     }
 }
