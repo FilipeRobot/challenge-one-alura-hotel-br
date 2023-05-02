@@ -282,7 +282,12 @@ public class RegistroHospede extends JFrame {
                     usuario.setVisible(true);
                     dispose();
                 } catch (Exception exception) {
-                    JOptionPane.showMessageDialog(null, exception.getMessage());
+                    JOptionPane.showMessageDialog(
+                            null,
+                            exception.getMessage(),
+                            "Informação",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
                 }
             }
         });

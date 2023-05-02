@@ -234,7 +234,12 @@ public class CadastrarUsuario extends JFrame {
         try {
             hotelController.cadastrar(new DadosUsuario(loginInformado, senhaInformada), senhaConfirmacaoInformada);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
+            JOptionPane.showMessageDialog(
+                    this,
+                    e.getMessage(),
+                    "ERRO",
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
     }
 }

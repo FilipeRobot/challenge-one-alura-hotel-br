@@ -300,10 +300,20 @@ public class ReservasView extends JFrame {
                         registro.setVisible(true);
                         dispose();
                     } catch (RuntimeException exception) {
-                        JOptionPane.showMessageDialog(null, exception.getMessage());
+                        JOptionPane.showMessageDialog(
+                                null,
+                                exception.getMessage(),
+                                "ERRO",
+                                JOptionPane.ERROR_MESSAGE
+                        );
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Deve preencher todos os campos.");
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Deve preencher todos os campos.",
+                            "Informação",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
                 }
             }
         });

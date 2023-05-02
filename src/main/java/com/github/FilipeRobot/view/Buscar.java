@@ -378,7 +378,12 @@ public class Buscar extends JFrame {
                 });
             }
         } catch (Exception exception) {
-            JOptionPane.showMessageDialog(this, exception.getMessage());
+            JOptionPane.showMessageDialog(
+                    this,
+                    exception.getMessage(),
+                    "ERRO",
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
     }
 
@@ -408,12 +413,19 @@ public class Buscar extends JFrame {
                 });
             }
         }catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this,
-                            "Deixe vazio para todas as reservas" + '\n' +
-                            "Ou informe o código da reserva");
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Deixe vazio para todas as reservas" + '\n' + "Ou informe o código da reserva",
+                    "Informação",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
         } catch (Exception exception) {
-            exception.printStackTrace();
-            JOptionPane.showMessageDialog(this, exception.getMessage());
+            JOptionPane.showMessageDialog(
+                    this,
+                    exception.getMessage(),
+                    "ERRO",
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
     }
 

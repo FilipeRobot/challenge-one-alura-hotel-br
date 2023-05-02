@@ -146,9 +146,18 @@ public class MenuPrincipal extends JFrame {
         btnLogin.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Login login = new Login();
-                login.setVisible(true);
-                dispose();
+                try {
+                    Login login = new Login();
+                    login.setVisible(true);
+                    dispose();
+                } catch (RuntimeException exception) {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            exception.getMessage(),
+                            "ERRO",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
             }
         });
         btnLogin.setLayout(null);
@@ -176,8 +185,17 @@ public class MenuPrincipal extends JFrame {
         btnCadastrar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                CadastrarUsuario cadastrar = new CadastrarUsuario();
-                cadastrar.setVisible(true);
+                try {
+                    CadastrarUsuario cadastrar = new CadastrarUsuario();
+                    cadastrar.setVisible(true);
+                } catch (RuntimeException exception) {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            exception.getMessage(),
+                            "ERRO",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
             }
         });
         btnCadastrar.setLayout(null);

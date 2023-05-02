@@ -16,7 +16,12 @@ public class HotelController {
     private final HospedeService hospedeService;
 
     public HotelController() {
-        EntityManager entityManager = JPAUtils.getEntityManager();
+        EntityManager entityManager;
+        try {
+            entityManager = JPAUtils.getEntityManager();
+        } catch (LinkageError exception) {
+            throw new RuntimeException("Não foi possível se conectar ao banco de dados", exception);
+        }
         this.usuarioService = new UsuarioService(entityManager);
         this.reservaService = new ReservaService(entityManager);
         this.hospedeService = new HospedeService(entityManager);

@@ -19,7 +19,7 @@ public class Login extends JFrame {
     int xMouse, yMouse;
     private JLabel labelExit;
     private JLabel labelAtras;
-    private final HotelController hotelController;
+    private HotelController hotelController;
 
     /**
      * Launch the application.
@@ -255,7 +255,7 @@ public class Login extends JFrame {
         labelAtras.setHorizontalAlignment(SwingConstants.CENTER);
         labelAtras.setFont(new Font("Roboto", Font.PLAIN, 23));
 
-        hotelController = null;//new HotelController();
+        hotelController = new HotelController();
     }
 
     private void fechar(MouseEvent e) {
@@ -282,7 +282,12 @@ public class Login extends JFrame {
             menu.setVisible(true);
             dispose();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
+            JOptionPane.showMessageDialog(
+                    this,
+                    e.getMessage(),
+                    "ERRO",
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
     }
 

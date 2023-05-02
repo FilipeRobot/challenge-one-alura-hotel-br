@@ -42,7 +42,7 @@ public record DadosHospede(String nome, String sobrenome, LocalDate dataNascimen
             try {
                 Long value = Long.valueOf(txtNreserva);
             } catch (NumberFormatException numberFormatException) {
-                throw new RuntimeException("Código de reserva informado não é um numero");
+                throw new RuntimeException("Código de reserva informado não é um numero", numberFormatException);
             }
         }
     }
